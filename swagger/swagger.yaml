@@ -1,0 +1,402 @@
+swagger: "2.0"
+info:
+  description: "API's for trophies website"
+  version: "0.0.1"
+  title: "Trophie API's"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "trophie@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:4000"
+basePath: "/trophies"
+tags:
+- name: "default"
+  description: "test and explore all api's"
+schemes:
+- "http"
+paths:
+  /signin:
+    post:
+      tags:
+        - "default"
+      summary: "Here admin/user login"
+      description: "please provide all details correctly"
+      consumes: "application/json"
+      parameters:
+        - in: body
+          name : body
+          schema:
+            type: object
+            properties: 
+              email:
+                type: string
+                example: "email"
+              password: 
+                type: string
+                example: "password"
+          required: true
+      produces: "application/json"
+      responses:
+        "200":
+          description: "request successfull"
+          schema: 
+            type: object
+            properties:
+              statusCode:
+                type: number
+                example: 200
+              message: 
+                type: string
+                example: "logged in"
+              access-token:
+                type: string
+                example: "dnieffi4fd903infdsv=d9f"
+        "400":
+          description: "request not processed successfully"
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                example: 400
+              message: 
+                type: string
+                example: "error"
+        default:
+          description: "unexpected error" 
+
+  /signup:
+    post:
+      tags: 
+        - "default"
+      summary: "Here Admin/user registers"
+      description: "Provide all details correctly"
+      consumes: "application/json"
+      parameters:
+        - in: body
+          name: body
+          schema: 
+            type: object
+            properties: 
+              firstName:
+                type: string
+                example: "firstName"
+              lastName:
+                type: string
+                example: "lastName"
+              email:
+                type: string
+                example: "email"
+              password:
+                type: string
+                example: "password"
+              role:
+                type: string
+                example: "admin/user"
+          required: true
+      produces: "application/json"
+      responses:
+        "200":
+          description: "request successfull"
+          schema: 
+            type: object
+            properties: 
+              statusCode: 
+                type: number
+                example: 200
+              message:
+                type: string
+                example: "User registered successfully"
+        "400":
+          description: "Bad Request"
+          schema: 
+            type: object
+            properties:
+              statusCode: 
+                type: number
+                example: 400
+              message: 
+                type: string
+                example: "Error occured"
+        default: 
+          description: "unhandeled error"
+  /:
+    get:
+      tags:
+        - "default"
+      summary: "Show all the trophies"
+      description: "get data of all the trophies"
+      produces: 
+        - "application/json"
+      responses:
+        "200":
+          description: "request succesfull"
+        "404":
+          description: "some error occured"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Error in fetching data from server."
+        default: 
+          description: "unexpected error"
+          
+  /add:
+    post:
+      tags:
+        - "default"
+      summary: "add a trophie here"
+      description: "you have to provide all the details"
+      consumes:
+        - "application/json"
+        - "multipart/form-data"
+      parameters:
+        - $ref: '#/parameters/access_token'
+        - in: formData
+          name: modelNumber
+          type: string
+          required: true
+        - in: formData
+          name: name
+          type: string
+          required: true
+        - in: formData
+          name: price
+          type: string
+          required: true
+        - in: formData
+          name: discount
+          type: number
+          required: true
+        - in: formData
+          name: description
+          type: string
+          required: true
+        - in: formData
+          name: image
+          type: file
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "request processed"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "successfully inserted"
+        "400":
+          description: "error occured"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "error occured"
+        default:
+          description: "some error"
+          
+  /update:
+    put:
+      tags:
+        - "default"
+      summary: "update the details of trophie here"
+      description: "you have to provide all the details"
+      consumes:
+        - "application/json"
+        - "multipart/form-data"
+      parameters:
+        - $ref: '#/parameters/access_token'
+        - in: formData
+          name: modelNumber
+          type: string
+          required: true
+        - in: formData
+          name: name
+          type: string
+          required: false
+        - in: formData
+          name: price
+          type: string
+          required: false
+        - in: formData
+          name: discount
+          type: number
+          required: false
+        - in: formData
+          name: description
+          type: string
+          required: false
+        - in: formData
+          name: image
+          type: file
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "request processed"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "successfully updated"
+        "400":
+          description: "error occured"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "error occured"
+        default:
+          description: "some error"
+          
+  /delete:
+    delete:
+      tags:
+        - "default"
+      summary: "delete a trophie here"
+      description: "you have to provide all the details correctly"
+      parameters:
+        - $ref: '#/parameters/access_token'
+        - in: body
+          name: body
+          schema: 
+            $ref: '#/definitions/deleteSchema'
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "request processed"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "successfully deleted"
+        "400":
+          description: "error occured"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "error occured"
+        default:
+          description: "some error"
+
+  /socialLogin:
+    post:
+      tags:
+        - 'default'
+      description: 'here user can signin via google'
+      summary: 'please provide code received from google'
+      consumes:
+        - 'application/json'
+      parameters:
+        - in: header
+          name: code
+          type: string
+          required: true
+        - in: body
+          name: role
+          schema:
+            type: object
+            properties:
+              role:
+                type: string
+                example: 'admin/user'
+          required: true
+      produces: 
+        - 'application/json'
+      responses:
+        '200':
+          description: 'ok'
+        '400':
+          description: 'bad request'
+        default:
+          description: 'unhandeled error'
+
+  /resetPassword/{token}:
+    put:
+      tags:
+        - 'default'
+      description: 'user/admin can reset password here'
+      summary: 'please provide new password'
+      consumes:
+        - 'application/json'
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: password
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                example: 'password'
+      produces:
+        - 'application/json'
+      responses:
+        '200':
+          description: 'ok'
+        '400':
+          description: 'bad-request'
+        default:
+          description: 'unhandeled-error'
+
+  /forgotPassword:
+    put:
+      tags:
+        - 'default'
+      description: 'provide email to get a password reset link'
+      summary: 'this will send an e-mail to given mail id if it is registered with us'
+      consumes:
+        - 'application/json'
+      parameters:
+        - in: body
+          name: email
+          requried: true
+          schema: 
+            type: object
+            properties:
+              email: 
+                type: string
+                example: 'email'
+      produces:
+        - 'application/json'
+      responses:
+        '200':
+          description: 'ok'
+        '400': 
+          description: 'bad-request'
+        default:
+          description: 'unhandeled error'
+definitions:
+  deleteSchema:
+    required:
+      - modelNumber
+    properties:
+      modelNumber:
+        type: string
+        description: enter modelNumber
+
+parameters:
+  access_token: &access_token
+    in: header
+    required: true
+    type: string
+    name: access-token

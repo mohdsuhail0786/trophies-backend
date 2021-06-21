@@ -1,0 +1,248 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.header {
+    position: fixed;
+    z-index: 1;
+    background-color: white;
+    top: 0; 
+    width: 100%;
+    height: 10%;
+    box-shadow: 0px 2px 15px rgb(0 0 0 / 10%);
+}
+.head {
+    height: 10%;
+    width: 100%;
+}
+
+.logo {
+    float: left;
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.nav {
+    float: left;
+    height: 100%;
+    width: 15%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    font-size: 18px;
+}
+
+@media only screen and (max-width: 758px) {
+    #dis {
+        display: none;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+.nav input[type=button] {
+    transition: 0.5s;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 50px;
+    height: 50%;
+    width: 70%;
+    font-size: 16px;
+}
+
+.nav input[type=button]:hover {
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+hr.small {
+    border: none;
+    height: 4px;
+    background: black;
+    border-radius: 50px;
+    width: 50%;
+}
+
+form {
+    font-size: 18px;
+    color:  black;
+    float: right;
+    margin-right: 20%;
+    margin-top: 5%;
+    width: 40%;
+    float: right;
+}
+
+form h1{
+    font-family: "Raleway", sans-serif;
+    COLOR:  black;
+    text-align: center;
+}
+
+input[type=text], input[type=submit], input[type=file], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box
+}
+input[type=submit], select {
+    background-color: black;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+}
+input[type=file], select {
+    padding: 12px 0px;
+    border: 0px;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.left {
+    height: 100%;
+    width: 30%;
+    margin-left: 10%;
+    margin-top: 15%;
+    float: left;
+}
+
+.card {
+    height: 28vw;
+    width: 15vw;
+    margin: 2%;
+    transition: 0.5s;
+    float: left;
+}
+
+.card:hover {
+    box-shadow: 0px 5px 5px;
+}
+.card .top {
+    height: 40%;
+}
+
+.card .middle {
+    height: 20%;
+    background-color: rgba(0,0,0,.03);
+}
+
+.card .bottom {
+    padding: 10%;
+    height: 30%;
+    transition: 0.5s;
+    margin-bottom: 10px;
+}
+
+.card .bottom:hover {
+    background-color: rgba(0,0,0,.03);
+}
+input[type=button] {
+    cursor: pointer;
+    background-color: goldenrod;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    height: 2vw;
+    width: 10vw;
+    font-size: 100%;   
+}
+.low {
+    width: 100vw;
+}
+
+.instock, .outstock {
+    background: green;
+    color: white;
+    width: 5vw;
+    border-radius: 3px;
+    float: right;
+    margin: 4%;
+    padding-left: 3%;
+}
+
+.outstock {
+    background: red;
+    width: 6.5vw;
+}
+
+.container {
+    margin-left: 20%;
+    float: left;
+}
+
+.slider {
+    display: none;
+    height:90%;
+    width: 100%;
+}
+
+
+.slideshow-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: -2;
+}
+  
+line {
+    fill-opacity: 0;
+    stroke: white;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke-dasharray: 2000;
+    animation: animLine 12s ease-in-out infinite;
+}
+  
+  @keyframes animLine {
+    0% {
+      stroke-dashoffset: 2000;
+    }
+    16% {
+      stroke-dashoffset: 0;
+    }
+32% {
+      stroke-dashoffset: 2000;
+    }
+    48% {
+      stroke-dashoffset: 0;
+    }
+64% {
+      stroke-dashoffset: 2000;
+    }
+    80% {
+      stroke-dashoffset: 0;
+    }
+    99% {
+      stroke-dashoffset: 2000;
+    }
+  }
