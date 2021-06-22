@@ -7,10 +7,8 @@ const bcrypt=require('bcrypt');
 const HttpStatus=require('http-status-codes');
 const globalConstant=require('../utils/globalConstant');
 const logger = require('../utils/logger');
-const verifyUser = require('../middlewares/verifyUser');
-const {Auth} = require('two-step-auth');
-const emailcheck=require('email-check');
-const legit=require('legit');
+const verifyUser= require('../middlewares/verify_user');
+const verifyForgotUser=require('../middlewares/verify_forgot_user');
 
 router.use(express.json());
 
@@ -99,24 +97,34 @@ router.post('/signup',(req,res)=>{
     }
 });
 
-router.put('/resetPassword/:token',verifyUser,(req,res)=>{
+//reset passsword of a logged in user
+router.put('/resetPassword',verifyUser,(req,res)=>{
     logger.debug('inside resetPassword');
     const pass=req.body.password;
     const user=req.user;
-    bcrypt.hash(pass,globalConstant.SALT_ROUNDS)
+    bcrypt.compare(pass,user.password)
+    .then((resp)=>{
+        if(resp){
+            return Promise.reject('currently using this password, can\'t change, try anoter one');
+        }
+        else{
+            return bcrypt.hash(pass,globalConstant.SALT_ROUNDS)      
+        }
+    })
     .then((hashed)=>{
         return User.findOneAndUpdate({email:user.email},{password:hashed},{new:true,useFindAndModify:false});
     })
     .then((result)=>{
         logger.debug('Password changed successfully');
-        res.status(HttpStatus.OK).json(apiUtils.getResponseMessage(200,'Password Reset successfull'));
+        res.status(HttpStatus.OK).json(apiUtils.getResponseMessage(HttpStatus.OK,'Password Reset successfull'));
     })
     .catch((err)=>{
-        logger.debug("Error Occured");
-        res.status(HttpStatus.BAD_REQUEST).json(apiUtils.getResponseMessage(400,err));
+        logger.debug("Error Occured :: "+err);
+        res.status(HttpStatus.BAD_REQUEST).json(apiUtils.getResponseMessage(HttpStatus.BAD_REQUEST,err));
     })
 })
 
+//publish a mail regarding forgot password
 router.put('/forgotPassword',(req,res)=>{
     logger.debug('inside forgot API')
     const email=req.body.email;
@@ -128,15 +136,14 @@ router.put('/forgotPassword',(req,res)=>{
                 id:result['_id'],
                 firstName:result.firstName,
                 email:result.email,
-                role:result.role,
+                role:result.role
             }
-            const token=apiUtils.generateAccessToken(obj,process.env.TOKEN_SECRET);
+            const token=apiUtils.generateAccessToken(obj,process.env.FORGOT_TOKEN_SECRET);
             apiUtils.sendmail(email,token)
             .then((resp)=>{
                 if(resp){
-                    logger.debug(JSON.stringify(resp));
-                    logger.debug('mail sent')
-                    res.status(HttpStatus.OK).json(apiUtils.getResponseMessage(HttpStatus.OK,`mail sent to ${email}`));
+                    logger.debug('mail sent, If mail id is correct you will receive the mail shortly..')
+                    res.status(HttpStatus.OK).json(apiUtils.getResponseMessage(HttpStatus.OK,`mail sent to ${email},If your mail id is correct you will receive the mail shortly..`));
                 }
                 else{
                     logger.debug('mail not exist')
@@ -157,6 +164,33 @@ router.put('/forgotPassword',(req,res)=>{
         res.status(HttpStatus.BAD_REQUEST).json(apiUtils.getResponseMessage(HttpStatus.BAD_REQUEST,err));
     })
     
+})
+
+//setNew password for forgot password 
+router.put('/forgotPassword/setNewPassword',verifyForgotUser,(req,res)=>{
+    logger.debug('inside forgot-> set new password');
+    const pass=req.body.password;
+    const user=req.user;
+    bcrypt.compare(pass,user.password)
+    .then((resp)=>{
+        if(resp){
+            return Promise.reject('currently using this password, can\'t change, try anoter one');
+        }
+        else{
+            return bcrypt.hash(pass,globalConstant.SALT_ROUNDS)      
+        }
+    })
+    .then((hashed)=>{
+        return User.findOneAndUpdate({email:user.email},{password:hashed},{new:true,useFindAndModify:false});
+    })
+    .then((result)=>{
+        logger.debug('Password changed successfully');
+        res.status(HttpStatus.OK).json(apiUtils.getResponseMessage(200,'Password Reset successfull'));
+    })
+    .catch((err)=>{
+        logger.debug("Error Occured");
+        res.status(HttpStatus.BAD_REQUEST).json(apiUtils.getResponseMessage(400,err));
+    })
 })
 
 module.exports=router;

@@ -297,8 +297,8 @@ paths:
     post:
       tags:
         - 'default'
-      description: 'here user can signin via google'
-      summary: 'please provide code received from google'
+      description: 'please provide code received from google'
+      summary: 'here user can signin via google'
       consumes:
         - 'application/json'
       parameters:
@@ -325,20 +325,16 @@ paths:
         default:
           description: 'unhandeled error'
 
-  /resetPassword/{token}:
+  /resetPassword:
     put:
       tags:
         - 'default'
-      description: 'user/admin can reset password here'
-      summary: 'please provide new password'
+      summary: 'user/admin can reset password here'
+      description: 'please provide access_token after login'
       consumes:
         - 'application/json'
       parameters:
-        - in: path
-          name: token
-          required: true
-          schema:
-            type: string
+        - $ref: '#/parameters/access_token'
         - in: body
           name: password
           required: true
@@ -385,6 +381,36 @@ paths:
           description: 'bad-request'
         default:
           description: 'unhandeled error'
+
+  /forgotPassword/setNewPassword:
+    put:
+      tags: 
+        - 'default'
+      summary: 'set password for forgot password'
+      description: 'please provide token which sent you on mail'
+      consumes: 'application/json'
+      parameters:
+        - $ref: '#/parameters/access_token'
+        - in: body
+          name: password
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                example: 'New-password'
+      produces:
+        - 'application/json'
+      responses:
+        '200':
+          description: 'ok'
+        '400':
+          description: 'bad-request'
+        default:
+          description: 'unhandeled-error'
+
+
 definitions:
   deleteSchema:
     required:

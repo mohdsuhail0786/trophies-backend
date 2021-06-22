@@ -6,7 +6,7 @@ const multer=require('multer');
 const {upload} = require('../middlewares/storage');
 const logger=require('../utils/logger');
 const HttpStatus=require('http-status-codes');
-const verifyUser=require('../middlewares/verifyUser');
+const verifyUser=require('../middlewares/verify_user');
 const apiUtils=require('../utils/apiUtils');
 
 router.use(bodyParser.json());
